@@ -1,21 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "umollu_ash",
-  "name": "ASH - Another Simple HUD",
-  "description": "ASH - Another Simple HUD with FPS count and coordinates.",
+  "id": "hen6003_mi",
+  "name": "MI - Movement Info",
+  "description": "Tells you info about your movement. Thanks goes to umollu for the code.",
+  "authors": [
+    "HEN6003"
+  ],
   "version": "${version}",
   "environment": "*",
+  "custom": {
+    "modmenu:clientsideOnly": true
+  },
   "entrypoints": {
     "client": [
-      "com.umollu.ash.AshMod"
+      "com.hen6003.mi.MIMod"
     ],
-    "cotton-client-commands": ["com.umollu.ash.AshCommands"]
+    "cotton-client-commands": ["com.hen6003.mi.MICommands"]
   },
   "depends": {
     "fabric": "*",
     "cotton-client-commands": "^1.0.0"
   },
   "mixins": [
-    "umollu_ash.mixins.json"
+    "hen6003_mi.mixins.json"
   ]
 }

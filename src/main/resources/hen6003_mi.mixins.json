@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.umollu.ash.mixin",
+  "package": "com.hen6003.mi.mixin",
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.7.11",
   "client": [

@@ -1,4 +1,4 @@
-package com.umollu.ash;
+package com.hen6003.mi;
 
 import com.google.gson.Gson;
 import com.mojang.brigadier.CommandDispatcher;
@@ -13,11 +13,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static com.umollu.ash.AshMod.MOD_ID;
+import static com.hen6003.mi.MIMod.MOD_ID;
 
-public class AshCommands implements ClientCommandPlugin {
+public class MICommands implements ClientCommandPlugin {
 
-    public static AshConfig config;
+    public static MIConfig config;
 
     @Override
     public void registerCommands(CommandDispatcher<CottonClientCommandSource> commandDispatcher) {
@@ -29,7 +29,7 @@ public class AshCommands implements ClientCommandPlugin {
         File configFile = new File(configPath);
 
         if(!configFile.exists()) {
-            config = new AshConfig();
+            config = new MIConfig();
             String result = gson.toJson(config);
             try {
                 FileOutputStream out = new FileOutputStream(configFile, false);
@@ -45,38 +45,25 @@ public class AshCommands implements ClientCommandPlugin {
         else {
 
             try {
-                config = gson.fromJson( new FileReader(configFile), AshConfig.class);
+                config = gson.fromJson( new FileReader(configFile), MIConfig.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             finally {
-                config = (config == null? new AshConfig() : config);
+                config = (config == null? new MIConfig() : config);
             }
         }
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("toggleash")
+        commandDispatcher.register(ArgumentBuilders.literal("mi_toggle")
             .executes(context -> {
                 config.showHud = !config.showHud;
                 config.saveConfig();
                 return 1;
             }));
 
-        commandDispatcher.register(ArgumentBuilders.literal("togglecoords")
-            .executes(context -> {
-                config.showCoords = !config.showCoords;
-                config.saveConfig();
-                return 1;
-            }));
 
-        commandDispatcher.register(ArgumentBuilders.literal("toggledirection")
-            .executes(context -> {
-                config.showDirection = !config.showDirection;
-                config.saveConfig();
-                return 1;
-            }));
-
-        commandDispatcher.register(ArgumentBuilders.literal("ashcolor")
+        commandDispatcher.register(ArgumentBuilders.literal("mi_color")
             .then(ArgumentBuilders.argument("r", IntegerArgumentType.integer())
                     .then(ArgumentBuilders.argument("g", IntegerArgumentType.integer())
                             .then(ArgumentBuilders.argument("b", IntegerArgumentType.integer())
@@ -90,14 +77,14 @@ public class AshCommands implements ClientCommandPlugin {
                                         return 1;
                                     })))));
 
-        commandDispatcher.register(ArgumentBuilders.literal("resetash")
+        commandDispatcher.register(ArgumentBuilders.literal("mi_reset")
             .executes(context -> {
-                config = new AshConfig();
+                config = new MIConfig();
                 config.saveConfig();
                 return 1;
             }));
 
-        commandDispatcher.register(ArgumentBuilders.literal("alignash")
+        commandDispatcher.register(ArgumentBuilders.literal("mi_align")
             .then(ArgumentBuilders.literal("left")
                     .executes(context -> {
                         config.align = 0;
