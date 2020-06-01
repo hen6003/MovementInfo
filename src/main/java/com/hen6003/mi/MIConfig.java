@@ -1,13 +1,15 @@
 package com.hen6003.mi;
 
 import com.google.gson.Gson;
-import net.fabricmc.loader.api.FabricLoader;
+
+import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MIConfig {
+    File runDirectory = MinecraftClient.getInstance().runDirectory;
 
     public boolean showHud = true;
 
@@ -16,7 +18,7 @@ public class MIConfig {
     public int align = 1;
 
     public void saveConfig() {
-        String configPath = FabricLoader.getInstance().getConfigDirectory() + "/" + MIMod.MOD_ID + ".json";
+        String configPath = runDirectory + "/" + MIMod.MOD_ID + ".json";
         File configFile = new File(configPath);
         String result = new Gson().toJson(this);
         try {

@@ -18,7 +18,6 @@
     "cotton-client-commands": ["com.hen6003.mi.MICommands"]
   },
   "depends": {
-    "fabric": "*",
     "cotton-client-commands": "^1.0.0"
   },
   "mixins": [

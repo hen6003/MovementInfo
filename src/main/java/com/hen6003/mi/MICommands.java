@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import io.github.cottonmc.clientcommands.ArgumentBuilders;
 import io.github.cottonmc.clientcommands.ClientCommandPlugin;
 import io.github.cottonmc.clientcommands.CottonClientCommandSource;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,11 +18,11 @@ import static com.hen6003.mi.MIMod.MOD_ID;
 public class MICommands implements ClientCommandPlugin {
 
     public static MIConfig config;
+    File runDirectory = MinecraftClient.getInstance().runDirectory;
 
     @Override
     public void registerCommands(CommandDispatcher<CottonClientCommandSource> commandDispatcher) {
-
-        String configPath = FabricLoader.getInstance().getConfigDirectory() + "/" + MOD_ID + ".json";
+        String configPath = runDirectory + "/" + MOD_ID + ".json";
 
         Gson gson = new Gson();
 
