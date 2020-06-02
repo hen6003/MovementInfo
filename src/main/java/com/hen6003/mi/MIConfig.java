@@ -17,6 +17,8 @@ public class MIConfig {
 
     public int align = 1;
 
+    public boolean onlyBps = false;
+
     public void saveConfig() {
         String configPath = runDirectory + "/" + MIMod.MOD_ID + ".json";
         File configFile = new File(configPath);

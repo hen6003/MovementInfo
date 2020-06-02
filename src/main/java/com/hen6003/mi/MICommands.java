@@ -63,6 +63,13 @@ public class MICommands implements ClientCommandPlugin {
             }));
 
 
+        commandDispatcher.register(ArgumentBuilders.literal("mi_bps")
+            .executes(context -> {
+                config.onlyBps = !config.onlyBps;
+                config.saveConfig();
+                return 1;
+            }));
+
         commandDispatcher.register(ArgumentBuilders.literal("mi_color")
             .then(ArgumentBuilders.argument("r", IntegerArgumentType.integer())
                     .then(ArgumentBuilders.argument("g", IntegerArgumentType.integer())

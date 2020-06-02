@@ -56,6 +56,14 @@ public class GameRendererMixin {
 				miString += "[Jumping]";
 			}
 
+			if (playerEntity.getHungerManager().getFoodLevel() <= 6){
+				miString += "[LowHunger]";
+			}
+
+			if (playerEntity.isSpectator()){
+				miString = "[Spectator]";
+			}
+
 			if (MIMod.timer == 30){
 				MIMod.oldMilliTime = MIMod.newMilliTime;
 				MIMod.newMilliTime = Util.getMeasuringTimeMs();
@@ -101,8 +109,13 @@ public class GameRendererMixin {
 				bpsTextPosX = client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(bpsString) - bpsTextPosX;
 			}
 
-			client.textRenderer.drawWithShadow(miString, textPosX, 5, MICommands.config.hudColor);
-			client.textRenderer.drawWithShadow(bpsString, bpsTextPosX, 15, MICommands.config.hudColor);
+			if (!MICommands.config.onlyBps){
+				client.textRenderer.drawWithShadow(miString, textPosX, 5, MICommands.config.hudColor);
+				client.textRenderer.drawWithShadow(bpsString, bpsTextPosX, 15, MICommands.config.hudColor);
+			} else {
+				client.textRenderer.drawWithShadow(bpsString, bpsTextPosX, 5, MICommands.config.hudColor);
+			}
+
 			RenderSystem.popMatrix();
 		}
 	}
