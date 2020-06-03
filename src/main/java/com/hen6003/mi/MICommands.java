@@ -1,24 +1,30 @@
 package com.hen6003.mi;
 
-import com.google.gson.Gson;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import io.github.cottonmc.clientcommands.ArgumentBuilders;
-import io.github.cottonmc.clientcommands.ClientCommandPlugin;
-import io.github.cottonmc.clientcommands.CottonClientCommandSource;
-import net.minecraft.client.MinecraftClient;
+import static com.hen6003.mi.MIMod.MOD_ID;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static com.hen6003.mi.MIMod.MOD_ID;
+import com.google.gson.Gson;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+
+import io.github.cottonmc.clientcommands.ArgumentBuilders;
+import io.github.cottonmc.clientcommands.ClientCommandPlugin;
+import io.github.cottonmc.clientcommands.CottonClientCommandSource;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class MICommands implements ClientCommandPlugin {
 
     public static MIConfig config;
     File runDirectory = MinecraftClient.getInstance().runDirectory;
+    MinecraftClient client = MinecraftClient.getInstance();
+    PlayerEntity playerEntity = (PlayerEntity) client.player;
 
     @Override
     public void registerCommands(CommandDispatcher<CottonClientCommandSource> commandDispatcher) {
@@ -55,7 +61,7 @@ public class MICommands implements ClientCommandPlugin {
         }
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("mi_toggle")
+        commandDispatcher.register(ArgumentBuilders.literal("mitoggle")
             .executes(context -> {
                 config.showHud = !config.showHud;
                 config.saveConfig();
@@ -63,14 +69,14 @@ public class MICommands implements ClientCommandPlugin {
             }));
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("mi_bps")
+        commandDispatcher.register(ArgumentBuilders.literal("mibps")
             .executes(context -> {
                 config.onlyBps = !config.onlyBps;
                 config.saveConfig();
                 return 1;
             }));
 
-        commandDispatcher.register(ArgumentBuilders.literal("mi_color")
+        commandDispatcher.register(ArgumentBuilders.literal("micolour")
             .then(ArgumentBuilders.argument("r", IntegerArgumentType.integer())
                     .then(ArgumentBuilders.argument("g", IntegerArgumentType.integer())
                             .then(ArgumentBuilders.argument("b", IntegerArgumentType.integer())
@@ -84,14 +90,23 @@ public class MICommands implements ClientCommandPlugin {
                                         return 1;
                                     })))));
 
-        commandDispatcher.register(ArgumentBuilders.literal("mi_reset")
+        commandDispatcher.register(ArgumentBuilders.literal("mireset")
             .executes(context -> {
                 config = new MIConfig();
                 config.saveConfig();
                 return 1;
             }));
 
-        commandDispatcher.register(ArgumentBuilders.literal("mi_align")
+        commandDispatcher.register(ArgumentBuilders.literal("mihelp")
+            .executes(context -> {
+                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmibps -> Toggles showing BPS only\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
+
+                final Text text = new LiteralText(helpMsg).formatted();
+                client.inGameHud.getChatHud().addMessage(text);
+                return 1;
+            }));
+
+        commandDispatcher.register(ArgumentBuilders.literal("mialign")
             .then(ArgumentBuilders.literal("left")
                     .executes(context -> {
                         config.align = 0;

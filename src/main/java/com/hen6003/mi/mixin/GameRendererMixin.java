@@ -24,7 +24,7 @@ public class GameRendererMixin {
 		MinecraftClient client = MinecraftClient.getInstance();
 		PlayerEntity playerEntity = (PlayerEntity) client.player;
 
-		if(!client.options.debugEnabled & MICommands.config.showHud) {
+		if (!client.options.debugEnabled & MICommands.config.showHud){
 			RenderSystem.pushMatrix();
 			String miString = "";
 
