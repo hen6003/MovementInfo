@@ -69,9 +69,9 @@ public class MICommands implements ClientCommandPlugin {
             }));
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("mibps")
+        commandDispatcher.register(ArgumentBuilders.literal("mips")
             .executes(context -> {
-                config.onlyBps = !config.onlyBps;
+                config.onlyPs = !config.onlyPs;
                 config.saveConfig();
                 return 1;
             }));
@@ -99,7 +99,7 @@ public class MICommands implements ClientCommandPlugin {
 
         commandDispatcher.register(ArgumentBuilders.literal("mihelp")
             .executes(context -> {
-                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmibps -> Toggles showing BPS only\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
+                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmips -> Toggles showing BPS/CPS only\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
 
                 final Text text = new LiteralText(helpMsg).formatted();
                 client.inGameHud.getChatHud().addMessage(text);

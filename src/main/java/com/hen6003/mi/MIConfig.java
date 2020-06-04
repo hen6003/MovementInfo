@@ -12,12 +12,9 @@ public class MIConfig {
     File runDirectory = MinecraftClient.getInstance().runDirectory;
 
     public boolean showHud = true;
-
     public int hudColor = 0xeeeeee;
-
     public int align = 1;
-
-    public boolean onlyBps = false;
+    public boolean onlyPs = false;
 
     public void saveConfig() {
         String configPath = runDirectory + "/" + MIMod.MOD_ID + ".json";

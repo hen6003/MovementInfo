@@ -64,6 +64,7 @@ public class GameRendererMixin {
 				miString = "[Spectator]";
 			}
 
+
 			if (MIMod.timer == 30){
 				MIMod.oldMilliTime = MIMod.newMilliTime;
 				MIMod.newMilliTime = Util.getMeasuringTimeMs();
@@ -91,10 +92,14 @@ public class GameRendererMixin {
 
 			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector)));
 
-			String bpsString = "";
+			String psString = "";
 
 			if (playerBPS != 0){
-				bpsString = "[BPS:" + playerBPS + "]";
+				psString = "[BPS:" + playerBPS + "]";
+			}
+
+			if (MIMod.cps != 0){
+				psString += "[CPS:" + MIMod.cps + "]";
 			}
 
 			float textPosX = 5;
@@ -102,18 +107,18 @@ public class GameRendererMixin {
 
 			if (MICommands.config.align == 1) {
 				textPosX = (client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(miString)) / 2f;
-				bpsTextPosX = (client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(bpsString)) / 2f;
+				bpsTextPosX = (client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(psString)) / 2f;
 			}
 			if (MICommands.config.align == 2) {
 				textPosX = client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(miString) - textPosX;
-				bpsTextPosX = client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(bpsString) - bpsTextPosX;
+				bpsTextPosX = client.getWindow().getScaledWidth() - client.textRenderer.getStringWidth(psString) - bpsTextPosX;
 			}
 
-			if (!MICommands.config.onlyBps){
+			if (!MICommands.config.onlyPs){
 				client.textRenderer.drawWithShadow(miString, textPosX, 5, MICommands.config.hudColor);
-				client.textRenderer.drawWithShadow(bpsString, bpsTextPosX, 15, MICommands.config.hudColor);
+				client.textRenderer.drawWithShadow(psString, bpsTextPosX, 15, MICommands.config.hudColor);
 			} else {
-				client.textRenderer.drawWithShadow(bpsString, bpsTextPosX, 5, MICommands.config.hudColor);
+				client.textRenderer.drawWithShadow(psString, bpsTextPosX, 5, MICommands.config.hudColor);
 			}
 
 			RenderSystem.popMatrix();

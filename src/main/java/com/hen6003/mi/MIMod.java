@@ -1,5 +1,8 @@
 package com.hen6003.mi;
 
+import java.util.Timer;
+import org.aperlambda.lambdacommon.utils.LambdaUtils;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.util.math.Vector3f;
 
@@ -12,8 +15,10 @@ public class MIMod implements ClientModInitializer {
     public static long newMilliTime = 0;
     public static long oldMilliTime = 0;
     public static int timer = 0;
+    public static int cps = 0;
 
     @Override
     public void onInitializeClient() {
+        new Timer().scheduleAtFixedRate(LambdaUtils.newTimerTaskFromLambda(() -> MIMod.cps = 0), 0, 1000);
     }
 }
