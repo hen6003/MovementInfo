@@ -14,6 +14,8 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
+//import net.minecraft.block.IceBlock;
+import net.minecraft.util.math.BlockPos;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -62,8 +64,9 @@ public class GameRendererMixin {
 
 			if (playerEntity.isSpectator()){
 				miString = "[Spectator]";
+			} else if (playerEntity.isCreative()){
+				miString += "[Creative]";
 			}
-
 
 			if (MIMod.timer == 30){
 				MIMod.oldMilliTime = MIMod.newMilliTime;
@@ -91,6 +94,12 @@ public class GameRendererMixin {
 			Vector3f tempVector = new Vector3f(MIMod.playerSpeed.getX(), MIMod.playerSpeed.getY(), MIMod.playerSpeed.getZ());
 
 			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector)));
+
+			float slipperiness = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock().getSlipperiness();
+			System.out.println(slipperiness);
+			if (slipperiness > 0.6f){
+				miString += "[Sliding]";
+			}
 
 			String psString = "";
 
