@@ -80,8 +80,6 @@ public class GameRendererMixin {
 				diffBlockPos.subtract(MIMod.oldBlockPos);
 				MIMod.playerSpeed = diffBlockPos;
 				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f;
-				System.out.println(timeDelta);
-				System.out.println("pos: " + MIMod.newBlockPos);
 
 				if (timeDelta != 0){
 					MIMod.playerSpeed.set((int)(MIMod.playerSpeed.getX() / timeDelta), (int)(MIMod.playerSpeed.getY() / timeDelta), (int)(MIMod.playerSpeed.getZ() / timeDelta));
@@ -96,7 +94,6 @@ public class GameRendererMixin {
 			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector)));
 
 			float slipperiness = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock().getSlipperiness();
-			System.out.println(slipperiness);
 			if (slipperiness > 0.6f){
 				miString += "[Sliding]";
 			}
