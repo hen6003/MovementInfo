@@ -83,8 +83,6 @@ public class GameRendererMixin {
 				diffBlockPos.subtract(MIMod.oldBlockPos);
 				MIMod.playerSpeed = diffBlockPos;
 				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f;
-				System.out.println(timeDelta);
-				System.out.println("pos: " + MIMod.newBlockPos);
 
 				if (timeDelta != 0){
 					MIMod.playerSpeed.set((int)(MIMod.playerSpeed.getX() / timeDelta), (int)(MIMod.playerSpeed.getY() / timeDelta), (int)(MIMod.playerSpeed.getZ() / timeDelta));
