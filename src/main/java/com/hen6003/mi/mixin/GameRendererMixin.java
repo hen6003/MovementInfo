@@ -15,7 +15,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-//import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +28,7 @@ public class GameRendererMixin {
 		MinecraftClient client = MinecraftClient.getInstance();
 		PlayerEntity playerEntity = (PlayerEntity) client.player;
 
-		if (!client.options.debugEnabled & MICommands.config.showHud){
+		if (!client.options.debugEnabled & MICommands.config.showHud & !client.inGameHud.getBossBarHud().shouldDarkenSky()){
 			RenderSystem.pushMatrix();
 			String miString = "";
 
@@ -110,8 +109,6 @@ public class GameRendererMixin {
 			if (MIMod.cps != 0){
 				psString += "[CPS:" + MIMod.cps + "]";
 			}
-
-			//BossBar
 
 			float textPosX = 5;
 			float bpsTextPosX = 5;
