@@ -17,7 +17,7 @@ public class MIConfig {
     public boolean onlyPs = false;
 
     public void saveConfig() {
-        String configPath = runDirectory + "/" + MIMod.MOD_ID + ".json";
+        String configPath = runDirectory + "/config" +  MIMod.MOD_ID + ".json";
         File configFile = new File(configPath);
         String result = new Gson().toJson(this);
         try {

@@ -5,7 +5,8 @@
   "minVersion": "0.7.11",
   "client": [
     "GameRendererMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "BossBarHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

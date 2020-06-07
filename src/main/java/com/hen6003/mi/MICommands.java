@@ -28,7 +28,7 @@ public class MICommands implements ClientCommandPlugin {
 
     @Override
     public void registerCommands(CommandDispatcher<CottonClientCommandSource> commandDispatcher) {
-        String configPath = runDirectory + "/" + MOD_ID + ".json";
+        String configPath = runDirectory + "/config" + MOD_ID + ".json";
 
         Gson gson = new Gson();
 

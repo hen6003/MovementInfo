@@ -2,6 +2,7 @@ package com.hen6003.mi.mixin;
 
 import com.hen6003.mi.MICommands;
 import com.hen6003.mi.MIMod;
+import com.hen6003.mi.IBossBarHud;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,9 @@ public class GameRendererMixin {
 		MinecraftClient client = MinecraftClient.getInstance();
 		PlayerEntity playerEntity = (PlayerEntity) client.player;
 
-		if (!client.options.debugEnabled & MICommands.config.showHud & !client.inGameHud.getBossBarHud().shouldDarkenSky()){
+		int bossBars = ((IBossBarHud)client.inGameHud.getBossBarHud()).getBossBarsLength();
+
+		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1) {
 			RenderSystem.pushMatrix();
 			String miString = "";
 
