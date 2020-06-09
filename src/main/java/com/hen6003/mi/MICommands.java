@@ -10,6 +10,7 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 
 import io.github.cottonmc.clientcommands.ArgumentBuilders;
 import io.github.cottonmc.clientcommands.ClientCommandPlugin;
@@ -28,7 +29,7 @@ public class MICommands implements ClientCommandPlugin {
 
     @Override
     public void registerCommands(CommandDispatcher<CottonClientCommandSource> commandDispatcher) {
-        String configPath = runDirectory + "/" + MOD_ID + ".json";
+        String configPath = runDirectory + "/config" + MOD_ID + ".json";
 
         Gson gson = new Gson();
 
@@ -60,6 +61,27 @@ public class MICommands implements ClientCommandPlugin {
             }
         }
 
+        commandDispatcher.register(ArgumentBuilders.literal("michangebps")
+            .then(ArgumentBuilders.argument("text", StringArgumentType.string())
+                .executes(context -> {
+                    String text = StringArgumentType.getString(context,"text");
+                    
+                    config.otherBps = text;
+                    
+                    config.saveConfig();
+                    return 1;
+                })));
+
+        commandDispatcher.register(ArgumentBuilders.literal("michangecps")
+            .then(ArgumentBuilders.argument("text", StringArgumentType.string())
+                .executes(context -> {
+                    String text = StringArgumentType.getString(context,"text");
+                        
+                    config.otherCps = text;
+                        
+                    config.saveConfig();
+                    return 1;
+                })));
 
         commandDispatcher.register(ArgumentBuilders.literal("mitoggle")
             .executes(context -> {
@@ -69,7 +91,7 @@ public class MICommands implements ClientCommandPlugin {
             }));
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("mips")
+        commandDispatcher.register(ArgumentBuilders.literal("mionlyps")
             .executes(context -> {
                 config.onlyPs = !config.onlyPs;
                 config.saveConfig();
@@ -99,7 +121,7 @@ public class MICommands implements ClientCommandPlugin {
 
         commandDispatcher.register(ArgumentBuilders.literal("mihelp")
             .executes(context -> {
-                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmips -> Toggles showing BPS/CPS only\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
+                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmips -> Toggles showing BPS/CPS only\nmichangecps <Text> -> Changes Text Before cps number\nmichangebps <Text> -> Changes Text Before bps number\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
 
                 final Text text = new LiteralText(helpMsg).formatted();
                 client.inGameHud.getChatHud().addMessage(text);
