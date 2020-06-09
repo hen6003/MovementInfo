@@ -1,8 +1,8 @@
 package com.hen6003.mi.mixin;
 
+import com.hen6003.mi.IBossBarHud;
 import com.hen6003.mi.MICommands;
 import com.hen6003.mi.MIMod;
-import com.hen6003.mi.IBossBarHud;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,12 +24,13 @@ import net.minecraft.util.math.BlockPos;
 public class GameRendererMixin {
 
 	@Inject(at = @At(value = "INVOKE", target = "com/mojang/blaze3d/systems/RenderSystem.defaultAlphaFunc()V"), method = "render", locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void render(float float_1, long long_1, boolean boolean_1, CallbackInfo info , int i, int j, Window window, MatrixStack matrixStack) {
+	public void render(float float_1, long long_1, boolean boolean_1, CallbackInfo info, int i, int j, Window window,
+			MatrixStack matrixStack) {
 
 		MinecraftClient client = MinecraftClient.getInstance();
-		PlayerEntity playerEntity = (PlayerEntity) client.player;
+		PlayerEntity playerEntity = client.player;
 
-		int bossBars = ((IBossBarHud)client.inGameHud.getBossBarHud()).getBossBarsLength();
+		int bossBars = ((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBarsLength();
 
 		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1) {
 			RenderSystem.pushMatrix();
@@ -47,30 +48,38 @@ public class GameRendererMixin {
 				miString += "[Sneaking]";
 			}
 
-			if (playerEntity.getVehicle() != null){
-			miString += "[" + playerEntity.getVehicle().getDisplayName().asString()+ "]";
-				
-				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
-				miString += "[Jumping]";
+			if (playerEntity.getVehicle() != null) {
+				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]";
+
+				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()) {
+					miString += "[Jumping]";
 				}
-			} else if (playerEntity.abilities.flying){
+			} else if (playerEntity.abilities.flying) {
 				miString += "[Flying]";
-			} else if (playerEntity.isFallFlying()){
+			} else if (playerEntity.isFallFlying()) {
 				miString += "[Flying]";
-			} else if (playerEntity.isClimbing()){
+			} else if (playerEntity.isClimbing()) {
 				miString += "[Climbing]";
 			} else if (!playerEntity.isOnGround() & !playerEntity.isSwimming()) {
 				miString += "[Jumping]";
 			}
 
-			if (playerEntity.getHungerManager().getFoodLevel() <= 6){
+			if (playerEntity.getHungerManager().getFoodLevel() <= 6) {
 				miString += "[LowHunger]";
 			}
 
-			if (playerEntity.isSpectator()){
-				miString = "[Spectator]";
-			} else if (playerEntity.isCreative()){
+			Integer gameMode = client.interactionManager.getCurrentGameMode().getId();
+
+			if (gameMode == 1){
 				miString += "[Creative]";
+			} else if (gameMode == 2){
+				miString += "[Adventure]";
+			} else if (gameMode == 3){
+				miString += "[Spectator]";
+			}
+
+			if (playerEntity.isSleeping()){
+				miString += "[Sleeping]";
 			}
 
 			if (MIMod.timer == 30){
@@ -105,13 +114,24 @@ public class GameRendererMixin {
 
 			String psString = "";
 
-			if (playerBPS != 0){
-				psString = "[BPS:" + playerBPS + "]";
-			}
+			if (!MICommands.config.otherPs){
+				if (playerBPS != 0){
+					psString = "[BPS:" + playerBPS + "]";
+				}
 
-			if (MIMod.cps != 0){
-				psString += "[CPS:" + MIMod.cps + "]";
+				if (MIMod.cps != 0){
+					psString += "[CPS:" + MIMod.cps + "]";
+				}
+			} else {
+				if (playerBPS != 0){
+					psString = "[" + playerBPS + "M/S]";
+				}
+
+				if (MIMod.cps != 0){
+					psString += "[" + MIMod.cps + "C/S]";
+				}
 			}
+			
 
 			float textPosX = 5;
 			float bpsTextPosX = 5;

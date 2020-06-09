@@ -69,12 +69,20 @@ public class MICommands implements ClientCommandPlugin {
             }));
 
 
-        commandDispatcher.register(ArgumentBuilders.literal("mips")
+        commandDispatcher.register(ArgumentBuilders.literal("mionlyps")
             .executes(context -> {
                 config.onlyPs = !config.onlyPs;
                 config.saveConfig();
                 return 1;
             }));
+
+        commandDispatcher.register(ArgumentBuilders.literal("miotherps")
+            .executes(context -> {
+                config.otherPs = !config.otherPs;
+                config.saveConfig();
+                return 1;
+            }));
+
 
         commandDispatcher.register(ArgumentBuilders.literal("micolour")
             .then(ArgumentBuilders.argument("r", IntegerArgumentType.integer())

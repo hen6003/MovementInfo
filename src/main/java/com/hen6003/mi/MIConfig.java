@@ -15,6 +15,7 @@ public class MIConfig {
     public int hudColor = 0xeeeeee;
     public int align = 1;
     public boolean onlyPs = false;
+    public boolean otherPs = false;
 
     public void saveConfig() {
         String configPath = runDirectory + "/config" +  MIMod.MOD_ID + ".json";
