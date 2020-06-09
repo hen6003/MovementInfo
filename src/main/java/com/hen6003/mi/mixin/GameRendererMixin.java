@@ -101,11 +101,11 @@ public class GameRendererMixin {
 			String psString = "";
 
 			if (playerBPS != 0){
-				psString = "[BPS:" + playerBPS + "]";
+				psString = "[" + MICommands.config.otherBps + + playerBPS + "]";
 			}
 
 			if (MIMod.cps != 0){
-				psString += "[CPS:" + MIMod.cps + "]";
+				psString += "[" + MICommands.config.otherCps + MIMod.cps + "]";
 			}
 
 			float textPosX = 5;
