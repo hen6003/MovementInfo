@@ -24,51 +24,50 @@ import net.minecraft.util.math.BlockPos;
 public class GameRendererMixin {
 
 	@Inject(at = @At(value = "INVOKE", target = "com/mojang/blaze3d/systems/RenderSystem.defaultAlphaFunc()V"), method = "render", locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void render(float float_1, long long_1, boolean boolean_1, CallbackInfo info, int i, int j, Window window,
-			MatrixStack matrixStack) {
+	public void render(float float_1, long long_1, boolean boolean_1, CallbackInfo info, int i, int j, Window window, MatrixStack matrixStack){
 
 		MinecraftClient client = MinecraftClient.getInstance();
 		PlayerEntity playerEntity = client.player;
 
 		int bossBars = ((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBarsLength();
 
-		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1) {
+		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1){
 			RenderSystem.pushMatrix();
 			String miString = "";
 
-			if (playerEntity.isBlocking()) {
+			if (playerEntity.isBlocking()){ //if player's using there shield 
 				miString += "[Blocking]";
 			}
-			if (playerEntity.isTouchingWater()) {
+			if (playerEntity.isTouchingWater()){ 
 				miString += "[Swimming]";
-			} else if (playerEntity.isSprinting()) {
+			} else if (playerEntity.isSprinting()){
 				miString += "[Sprinting]";
 			}
-			if (playerEntity.isSneaking()) {
+			if (playerEntity.isSneaking()){
 				miString += "[Sneaking]";
 			}
 
-			if (playerEntity.getVehicle() != null) {
-				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]";
+			if (playerEntity.getVehicle() != null){ //if there riding something
+				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]"; //gets riden entity name
 
-				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()) {
+				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
 					miString += "[Jumping]";
 				}
-			} else if (playerEntity.abilities.flying) {
+			} else if (playerEntity.abilities.flying){
 				miString += "[Flying]";
-			} else if (playerEntity.isFallFlying()) {
+			} else if (playerEntity.isFallFlying()){ //is using an elytra
 				miString += "[Flying]";
-			} else if (playerEntity.isClimbing()) {
+			} else if (playerEntity.isClimbing()){
 				miString += "[Climbing]";
-			} else if (!playerEntity.isOnGround() & !playerEntity.isSwimming()) {
+			} else if (!playerEntity.isOnGround() & !playerEntity.isSwimming()){
 				miString += "[Jumping]";
 			}
 
-			if (playerEntity.getHungerManager().getFoodLevel() <= 6) {
+			if (playerEntity.getHungerManager().getFoodLevel() <= 6){ //low hunger so player can't run
 				miString += "[LowHunger]";
 			}
 
-			Integer gameMode = client.interactionManager.getCurrentGameMode().getId();
+			Integer gameMode = client.interactionManager.getCurrentGameMode().getId(); //gets id of gamemode
 
 			if (gameMode == 1){
 				miString += "[Creative]";
@@ -82,20 +81,24 @@ public class GameRendererMixin {
 				miString += "[Sleeping]";
 			}
 
-			if (MIMod.timer == 30){
-				MIMod.oldMilliTime = MIMod.newMilliTime;
+			if (playerEntity.isOnFire()){
+				miString += "[OnFire]";
+			}
+
+			if (MIMod.timer == 30){ //only runs once every 30 frames
+				MIMod.oldMilliTime = MIMod.newMilliTime; //gets time changed
 				MIMod.newMilliTime = Util.getMeasuringTimeMs();
 
 				MIMod.oldBlockPos = MIMod.newBlockPos;
-				MIMod.newBlockPos = new Vector3f((float)(playerEntity.getX()), (float)(playerEntity.getY()), (float)(playerEntity.getZ()));
+				MIMod.newBlockPos = new Vector3f((float)(playerEntity.getX()), (float)(playerEntity.getY()), (float)(playerEntity.getZ())); //gets player cords
 
 				Vector3f diffBlockPos = new Vector3f();
-				diffBlockPos.set(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY(), MIMod.newBlockPos.getZ());
-				diffBlockPos.subtract(MIMod.oldBlockPos);
-				MIMod.playerSpeed = diffBlockPos;
-				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f;
+				diffBlockPos.set(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY(), MIMod.newBlockPos.getZ()); //sets diffBLocksPos to newBlockPos
+				diffBlockPos.subtract(MIMod.oldBlockPos); //subtracts oldBlockPos
+				MIMod.playerSpeed = diffBlockPos; //player speed equals vector changed
+				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f; //gets delta
 
-				if (timeDelta != 0){
+				if (timeDelta != 0){ //fixes dividing by 0 at start of game
 					MIMod.playerSpeed.set((int)(MIMod.playerSpeed.getX() / timeDelta), (int)(MIMod.playerSpeed.getY() / timeDelta), (int)(MIMod.playerSpeed.getZ() / timeDelta));
 				}
 				MIMod.timer = 0;
@@ -105,47 +108,38 @@ public class GameRendererMixin {
 
 			Vector3f tempVector = new Vector3f(MIMod.playerSpeed.getX(), MIMod.playerSpeed.getY(), MIMod.playerSpeed.getZ());
 
-			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector)));
+			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector))); //gets BPS
 
 			float slipperiness = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock().getSlipperiness();
-			if (slipperiness > 0.6f){
+			if (slipperiness > 0.6f){ //normal block 'slipperiness' equals 0.6
 				miString += "[Sliding]";
 			}
 
 			String psString = "";
 
-			if (!MICommands.config.otherPs){
-				if (playerBPS != 0){
-					psString = "[BPS:" + playerBPS + "]";
-				}
 
-				if (MIMod.cps != 0){
-					psString += "[CPS:" + MIMod.cps + "]";
-				}
-			} else {
-				if (playerBPS != 0){
-					psString = "[" + playerBPS + "M/S]";
-				}
+			if (playerBPS != 0){
+				psString = "[" + MICommands.config.otherBps + + playerBPS + "]";
+			}
 
-				if (MIMod.cps != 0){
-					psString += "[" + MIMod.cps + "C/S]";
-				}
+			if (MIMod.cps != 0){
+				psString += "[" + MICommands.config.otherCps + MIMod.cps + "]";
 			}
 			
 
 			float textPosX = 5;
 			float bpsTextPosX = 5;
 
-			if (MICommands.config.align == 1) {
+			if (MICommands.config.align == 1){ //set where text shows up
 				textPosX = (client.getWindow().getScaledWidth() - client.textRenderer.getWidth(miString)) / 2f;
 				bpsTextPosX = (client.getWindow().getScaledWidth() - client.textRenderer.getWidth(psString)) / 2f;
 			}
-			if (MICommands.config.align == 2) {
+			if (MICommands.config.align == 2){
 				textPosX = client.getWindow().getScaledWidth() - client.textRenderer.getWidth(miString) - textPosX;
 				bpsTextPosX = client.getWindow().getScaledWidth() - client.textRenderer.getWidth(psString) - bpsTextPosX;
 			}
 
-			if (!MICommands.config.onlyPs){
+			if (!MICommands.config.onlyPs){ //print text to screen
 				client.textRenderer.drawWithShadow(matrixStack, miString, textPosX, 5, MICommands.config.hudColor);
 				client.textRenderer.drawWithShadow(matrixStack, psString, bpsTextPosX, 15, MICommands.config.hudColor);
 			} else {
