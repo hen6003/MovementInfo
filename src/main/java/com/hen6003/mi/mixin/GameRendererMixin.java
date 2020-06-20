@@ -9,6 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SlimeBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.Vector3f;
@@ -88,7 +90,7 @@ public class GameRendererMixin {
 				miString += "[Flying]";
 			} else if (playerEntity.isClimbing()){
 				miString += "[Climbing]";
-			} else if (!playerEntity.onGround & !playerEntity.isSwimming()) {
+			} else if (!playerEntity.onGround & !playerEntity.isSwimming() & standingOnBlock.getClass() != SlimeBlock.class) {
 				miString += "[Jumping]";
 			}
 
