@@ -30,6 +30,40 @@ public class GameRendererMixin {
 			RenderSystem.pushMatrix();
 			String miString = "";
 
+
+			if (MIMod.timer == 30){ //only runs once every 30 frames
+				MIMod.oldMilliTime = MIMod.newMilliTime; //gets time changed
+				MIMod.newMilliTime = Util.getMeasuringTimeMs();
+
+				MIMod.oldBlockPos = MIMod.newBlockPos;
+				MIMod.newBlockPos = new Vector3f((float)(playerEntity.getX()), (float)(playerEntity.getY()), (float)(playerEntity.getZ())); //gets player cords
+
+				Vector3f diffBlockPos = new Vector3f();
+				diffBlockPos.set(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY(), MIMod.newBlockPos.getZ()); //sets diffBLocksPos to newBlockPos
+				diffBlockPos.subtract(MIMod.oldBlockPos); //subtracts oldBlockPos
+				MIMod.playerSpeed = diffBlockPos; //player speed equals vector changed
+				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f; //gets delta
+
+				if (timeDelta != 0){ //fixes dividing by 0 at start of game
+					MIMod.playerSpeed.set((int)(MIMod.playerSpeed.getX() / timeDelta), (int)(MIMod.playerSpeed.getY() / timeDelta), (int)(MIMod.playerSpeed.getZ() / timeDelta));
+				}
+				MIMod.timer = 0;
+			} else {
+				MIMod.timer += 1;
+			}
+
+			Vector3f tempVector = new Vector3f(MIMod.playerSpeed.getX(), MIMod.playerSpeed.getY(), MIMod.playerSpeed.getZ());
+
+			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector))); //gets BPS
+
+
+			Block standingOnBlock = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock();
+			float slipperiness = standingOnBlock.getSlipperiness();
+			if (slipperiness > 0.6f){ //normal block 'slipperiness' equals 0.6
+				miString += "[Sliding]";
+			}
+
+
 			if (playerEntity.isBlocking()) {
 				miString += "[Blocking]";
 			}
@@ -68,35 +102,6 @@ public class GameRendererMixin {
 				miString += "[Creative]";
 			}
 
-			if (MIMod.timer == 30){
-				MIMod.oldMilliTime = MIMod.newMilliTime;
-				MIMod.newMilliTime = Util.getMeasuringTimeMs();
-
-				MIMod.oldBlockPos = MIMod.newBlockPos;
-				MIMod.newBlockPos = new Vector3f((float)(playerEntity.getX()), (float)(playerEntity.getY()), (float)(playerEntity.getZ()));
-
-				Vector3f diffBlockPos = new Vector3f();
-				diffBlockPos.set(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY(), MIMod.newBlockPos.getZ());
-				diffBlockPos.subtract(MIMod.oldBlockPos);
-				MIMod.playerSpeed = diffBlockPos;
-				float timeDelta = (MIMod.newMilliTime - MIMod.oldMilliTime) / 1000f;
-
-				if (timeDelta != 0){
-					MIMod.playerSpeed.set((int)(MIMod.playerSpeed.getX() / timeDelta), (int)(MIMod.playerSpeed.getY() / timeDelta), (int)(MIMod.playerSpeed.getZ() / timeDelta));
-				}
-				MIMod.timer = 0;
-			} else {
-				MIMod.timer += 1;
-			}
-
-			Vector3f tempVector = new Vector3f(MIMod.playerSpeed.getX(), MIMod.playerSpeed.getY(), MIMod.playerSpeed.getZ());
-
-			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector)));
-
-			float slipperiness = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock().getSlipperiness();
-			if (slipperiness > 0.6f){
-				miString += "[Sliding]";
-			}
 
 			String psString = "";
 
