@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.SlimeBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.Window;
@@ -31,59 +33,10 @@ public class GameRendererMixin {
 
 		int bossBars = ((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBarsLength();
 
-		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1){
+		if (!client.options.debugEnabled & MICommands.config.showHud & bossBars < 1 & MinecraftClient.isHudEnabled()) {
 			RenderSystem.pushMatrix();
 			String miString = "";
 
-			if (playerEntity.isBlocking()){ //if player's using there shield 
-				miString += "[Blocking]";
-			}
-			if (playerEntity.isTouchingWater()){ 
-				miString += "[Swimming]";
-			} else if (playerEntity.isSprinting()){
-				miString += "[Sprinting]";
-			}
-			if (playerEntity.isSneaking()){
-				miString += "[Sneaking]";
-			}
-
-			if (playerEntity.getVehicle() != null){ //if there riding something
-				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]"; //gets riden entity name
-
-				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
-					miString += "[Jumping]";
-				}
-			} else if (playerEntity.abilities.flying){
-				miString += "[Flying]";
-			} else if (playerEntity.isFallFlying()){ //is using an elytra
-				miString += "[Flying]";
-			} else if (playerEntity.isClimbing()){
-				miString += "[Climbing]";
-			} else if (!playerEntity.isOnGround() & !playerEntity.isSwimming()){
-				miString += "[Jumping]";
-			}
-
-			if (playerEntity.getHungerManager().getFoodLevel() <= 6){ //low hunger so player can't run
-				miString += "[LowHunger]";
-			}
-
-			Integer gameMode = client.interactionManager.getCurrentGameMode().getId(); //gets id of gamemode
-
-			if (gameMode == 1){
-				miString += "[Creative]";
-			} else if (gameMode == 2){
-				miString += "[Adventure]";
-			} else if (gameMode == 3){
-				miString += "[Spectator]";
-			}
-
-			if (playerEntity.isSleeping()){
-				miString += "[Sleeping]";
-			}
-
-			if (playerEntity.isOnFire()){
-				miString += "[OnFire]";
-			}
 
 			if (MIMod.timer == 30){ //only runs once every 30 frames
 				MIMod.oldMilliTime = MIMod.newMilliTime; //gets time changed
@@ -110,9 +63,61 @@ public class GameRendererMixin {
 
 			int playerBPS = (int)(Math.sqrt(tempVector.dot(tempVector))); //gets BPS
 
-			float slipperiness = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock().getSlipperiness();
+
+			Block standingOnBlock = playerEntity.world.getBlockState(new BlockPos(MIMod.newBlockPos.getX(), MIMod.newBlockPos.getY() - 1f, MIMod.newBlockPos.getZ())).getBlock();
+			float slipperiness = standingOnBlock.getSlipperiness();
 			if (slipperiness > 0.6f){ //normal block 'slipperiness' equals 0.6
 				miString += "[Sliding]";
+			}
+
+			if (playerEntity.isBlocking()){ //if player's using there shield 
+				miString += "[Blocking]";
+			}
+			if (playerEntity.isTouchingWater()){ 
+				miString += "[Swimming]";
+			} else if (playerEntity.isSprinting()){
+				miString += "[Sprinting]";
+			}
+			if (playerEntity.isSneaking()){
+				miString += "[Sneaking]";
+			}
+
+			if (playerEntity.getVehicle() != null){ //if there riding something
+				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]"; //gets riden entity name
+
+				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
+					miString += "[Jumping]";
+				}
+			} else if (playerEntity.abilities.flying){
+				miString += "[Flying]";
+			} else if (playerEntity.isFallFlying()){ //is using an elytra
+				miString += "[Flying]";
+			} else if (playerEntity.isClimbing()){
+				miString += "[Climbing]";
+			} else if (!playerEntity.isOnGround() & !playerEntity.isSwimming() & standingOnBlock.getClass() != SlimeBlock.class){
+				miString += "[Jumping]";
+			}
+
+			if (playerEntity.getHungerManager().getFoodLevel() <= 6){ //low hunger so player can't run
+				miString += "[LowHunger]";
+			}
+
+			Integer gameMode = client.interactionManager.getCurrentGameMode().getId(); //gets id of gamemode
+
+			if (gameMode == 1){
+				miString += "[Creative]";
+			} else if (gameMode == 2){
+				miString += "[Adventure]";
+			} else if (gameMode == 3){
+				miString += "[Spectator]";
+			}
+
+			if (playerEntity.isSleeping()){
+				miString += "[Sleeping]";
+			}
+
+			if (playerEntity.isOnFire()){
+				miString += "[OnFire]";
 			}
 
 			String psString = "";
