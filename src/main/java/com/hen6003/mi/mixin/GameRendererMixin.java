@@ -123,11 +123,11 @@ public class GameRendererMixin {
 			String psString = "";
 
 
-			if (playerBPS != 0 & MICommands.config.hideBps){
+			if (playerBPS != 0 & !MICommands.config.hideBps){
 				psString = "[" + MICommands.config.otherBps + + playerBPS + "]";
 			}
 
-			if (MIMod.cps != 0 & MICommands.config.hideCps){
+			if (MIMod.cps != 0 & !MICommands.config.hideCps){
 				psString += "[" + MICommands.config.otherCps + MIMod.cps + "]";
 			}
 			
