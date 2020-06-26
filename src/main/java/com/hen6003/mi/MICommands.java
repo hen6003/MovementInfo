@@ -90,6 +90,19 @@ public class MICommands implements ClientCommandPlugin {
                 return 1;
             }));
 
+        commandDispatcher.register(ArgumentBuilders.literal("mihidebps")
+            .executes(context -> {
+                config.hideBps = !config.hideBps;
+                config.saveConfig();
+                return 1;
+            }));
+
+        commandDispatcher.register(ArgumentBuilders.literal("mihidecps")
+            .executes(context -> {
+                config.hideCps = !config.hideCps;
+                config.saveConfig();
+                return 1;
+            }));
 
         commandDispatcher.register(ArgumentBuilders.literal("mionlyps")
             .executes(context -> {

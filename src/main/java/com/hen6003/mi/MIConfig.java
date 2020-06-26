@@ -17,6 +17,8 @@ public class MIConfig {
     public boolean onlyPs = false;
     public String otherBps = "BPS:";
     public String otherCps = "CPS:";
+    public boolean hideBps = false;
+    public boolean hideCps = false;
 
     public void saveConfig() {
         String configPath = runDirectory + "/config" +  MIMod.MOD_ID + ".json";
