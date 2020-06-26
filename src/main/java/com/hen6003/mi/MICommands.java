@@ -134,7 +134,7 @@ public class MICommands implements ClientCommandPlugin {
 
         commandDispatcher.register(ArgumentBuilders.literal("mihelp")
             .executes(context -> {
-                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmips -> Toggles showing BPS/CPS only\nmichangecps <Text> -> Changes Text Before cps number\nmichangebps <Text> -> Changes Text Before bps number\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
+                String helpMsg = "======== Movement Info Help ========\nmihelp -> Shows help\nmitoggle -> Toggles mod On/Off\nmips -> Toggles showing BPS/CPS only\nmihidebps -> Toggles bps On/Off\nmihidecps -> Toggles cps On/Off\nmichangecps <Text> -> Changes Text Before cps number\nmichangebps <Text> -> Changes Text Before bps number\nmialign <left|center|right> -> Changes position of text\nmicolour <r> <g> <b> -> Change text colour\nmireset -> Resets config";
 
                 final Text text = new LiteralText(helpMsg).formatted();
                 client.inGameHud.getChatHud().addMessage(text);
