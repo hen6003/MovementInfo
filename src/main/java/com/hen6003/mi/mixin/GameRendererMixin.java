@@ -82,8 +82,14 @@ public class GameRendererMixin {
 				miString += "[Sneaking]";
 			}
 
-			if (playerEntity.getVehicle() != null){ //if there riding something
-				miString += "[" + playerEntity.getVehicle().getDisplayName().asString() + "]"; //gets riden entity name
+			if (playerEntity.getVehicle() != null){ //if their riding something
+				String name = playerEntity.getVehicle().getDisplayName().asString();
+				if (name == ""){
+					name = playerEntity.getVehicle().getClass().getSimpleName();
+					name = name.substring(0, name.length() - 6);
+				}
+
+				miString += "[" + name + "]"; //gets riden entity name
 
 				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
 					miString += "[Jumping]";
