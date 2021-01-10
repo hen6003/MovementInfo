@@ -83,13 +83,13 @@ public class GameRendererMixin {
 			}
 
 			if (playerEntity.getVehicle() != null){ //if their riding something
-				String name = playerEntity.getVehicle().getDisplayName().asString();
-				if (name == ""){
-					name = playerEntity.getVehicle().getClass().getSimpleName();
-					name = name.substring(0, name.length() - 6);
+				String name = playerEntity.getVehicle().getDisplayName().asString(); //gets riden entity name 
+				if (name == ""){ //if entity has no name
+					 name = playerEntity.getVehicle().getClass().getSimpleName(); //gets entitys class name
+					name = name.substring(0, name.length() - 6); //removes 'Entity' from the end
 				}
 
-				miString += "[" + name + "]"; //gets riden entity name
+				miString += "[Riding: " + name + "]";
 
 				if (!playerEntity.getVehicle().isOnGround() & !playerEntity.getVehicle().isSubmergedInWater()){
 					miString += "[Jumping]";
